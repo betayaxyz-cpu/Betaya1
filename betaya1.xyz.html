@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Escape Room</title>
+
+<style>
+
+body{
+margin:0;
+background:linear-gradient(#0a0a0a,#1f1f1f);
+font-family:Arial;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+#game{
+width:900px;
+background:#141414;
+border-radius:12px;
+box-shadow:0 0 20px black;
+padding:20px;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+#timer{
+font-size:22px;
+color:#ff4444;
+}
+
+#inventory{
+background:#0c0c0c;
+padding:10px;
+border-radius:8px;
+margin-top:10px;
+}
+
+button{
+background:#2b2b2b;
+border:none;
+color:white;
+padding:12px;
+margin:5px;
+border-radius:6px;
+transition:0.2s;
+font-size:15px;
+}
+
+button:hover{
+background:#444;
+transform:scale(1.05);
+}
+
+.room{
+display:none;
+margin-top:20px;
+}
+
+.active{
+display:block;
+}
+
+input{
+padding:10px;
+border-radius:5px;
+border:none;
+margin:5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+<header>
+<h2>🧩 Escape Room</h2>
+<div>Tempo: <span id="timer">300</span></div>
+</header>
+
+<div id="inventory">
+Inventário: <span id="items">vazio</span>
+</div>
+
+<div id="room1" class="room active">
+
+<h3>Sala 1 — Escritório</h3>
+
+<p>Uma mesa antiga e um cofre.</p>
+
+<button onclick="lookDesk()">Examinar mesa</button>
+<button onclick="openSafe()">Abrir cofre</button>
+
+</div>
+
+<div id="room2" class="room">
+
+<h3>Sala 2 — Laboratório</h3>
+
+<p>Um computador antigo.</p>
+
+<button onclick="useComputer()">Usar computador</button>
+
+</div>
+
+<div id="room3" class="room">
+
+<h3>Sala 3 — Porta</h3>
+
+<p>Digite o código.</p>
+
+<input id="doorCode">
+
+<button onclick="unlockDoor()">Destrancar</button>
+
+</div>
+
+<div id="room4" class="room">
+
+<h2>🎉 Você escapou!</h2>
+
+</div>
+
+</div>
+
+<script>
+
+let inventory = []
+let timer = 300
+
+function updateInventory(){
+
+document.getElementById("items").innerText =
+inventory.length ? inventory.join(", ") : "vazio"
+
+}
+
+function changeRoom(room){
+
+document.querySelectorAll(".room").forEach(r=>r.classList.remove("active"))
+document.getElementById(room).classList.add("active")
+
+}
+
+function lookDesk(){
+
+if(!inventory.includes("chave")){
+
+alert("Você encontrou uma chave!")
+
+inventory.push("chave")
+updateInventory()
+
+}else{
+
+alert("Nada mais aqui.")
+
+}
+
+}
+
+function openSafe(){
+
+if(!inventory.includes("chave")){
+
+alert("O cofre está trancado.")
+return
+
+}
+
+let code = prompt("Digite o código (dica: 123)")
+
+if(code == "123"){
+
+alert("Você encontrou um pendrive!")
+
+inventory.push("pendrive")
+updateInventory()
+
+changeRoom("room2")
+
+}else{
+
+alert("Código errado")
+
+}
+
+}
+
+function useComputer(){
+
+if(!inventory.includes("pendrive")){
+
+alert("Precisa de um pendrive.")
+return
+
+}
+
+alert("Arquivo aberto. Código da porta: 0451")
+
+changeRoom("room3")
+
+}
+
+function unlockDoor(){
+
+let code = document.getElementById("doorCode").value
+
+if(code == "0451"){
+
+changeRoom("room4")
+
+}else{
+
+alert("Código errado")
+
+}
+
+}
+
+setInterval(()=>{
+
+timer--
+document.getElementById("timer").innerText = timer
+
+if(timer <= 0){
+
+alert("Tempo acabou!")
+location.reload()
+
+}
+
+},1000)
+
+</script>
+
+</body>
+</html>
